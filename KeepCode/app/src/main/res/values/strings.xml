@@ -2,4 +2,8 @@
     <string name="app_name">Keep Code</string>
     <string name="enter_title">Enter Title</string>
     <string name="enter_details">Enter Details</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="sample_note_title">Sample Note TItle</string>
 </resources>
