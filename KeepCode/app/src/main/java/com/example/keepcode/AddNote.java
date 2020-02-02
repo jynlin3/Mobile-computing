@@ -21,6 +21,7 @@ public class AddNote extends AppCompatActivity {
     Toolbar toolbar;
     EditText noteTitle;
     EditText noteDetails;
+    int noteID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +34,15 @@ public class AddNote extends AppCompatActivity {
 
         noteTitle = findViewById(R.id.noteTitle);
         noteDetails = findViewById(R.id.noteDetails);
+        noteID = -1;
 
-        Intent intent = getIntent();
-//        if (intent != null) {
-//            String title = intent.getExtras().getString("title");
-//            TextView tv_title = (TextView)findViewById(R.id.nTitle);
-//            tv_title.setText(title);
-//        }
+        Note note = (Note) getIntent().getSerializableExtra("note");
+        if (note != null) {
+            noteTitle.setText(note.getTitle());
+            noteDetails.setText(note.getContent());
+            getSupportActionBar().setTitle(note.getTitle());
+            noteID = note.getId();
+        }
     }
 
     @Override
@@ -53,18 +56,22 @@ public class AddNote extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save)
         {
+            //TODO: Update note.
             Date currentTime = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(),
                     dateFormat.format(currentTime), dateFormat.format(currentTime));
             NoteDatabase.getInstance(this).noteDao().insert(note);
-            Toast.makeText(this, "Save btn is clicked", Toast.LENGTH_SHORT).show();
             goToMain();
         }
         if (item.getItemId() == R.id.delete)
         {
-            Toast.makeText(this, "Delete btn is clicked", Toast.LENGTH_SHORT).show();
-            onBackPressed();
+            if(noteID != -1) {
+                NoteDatabase.getInstance(this).noteDao().deleteByNoteId(noteID);
+                Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is deleted.", Toast.LENGTH_SHORT)
+                        .show();
+            }
+            goToMain();
         }
         return super.onOptionsItemSelected(item);
     }

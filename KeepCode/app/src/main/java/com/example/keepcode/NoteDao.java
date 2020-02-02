@@ -20,6 +20,9 @@ public interface NoteDao {
     @Delete
     void delete(Note note);
 
-    @Query("SELECT * FROM note_table")
+    @Query("SELECT * FROM note_table ORDER BY id DESC")
     List<Note> getAllNotes();
+
+    @Query("DELETE FROM note_table WHERE id = :noteId")
+    void deleteByNoteId(long noteId);
 }

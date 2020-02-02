@@ -49,7 +49,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(v.getContext(), AddNote.class);
-                    i.putExtra("title", "Sample Title");
+                    i.putExtra("note", notes.get(getAdapterPosition()));
                     v.getContext().startActivity(i);
                 }
             });
