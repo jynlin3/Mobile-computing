@@ -12,10 +12,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
     Adapter adapter;
+    List<Note> notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.listOfNotes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(this);
+        notes = NoteDatabase.getInstance(this).noteDao().getAllNotes();
+        adapter = new Adapter(this, notes);
         recyclerView.setAdapter(adapter);
     }
 

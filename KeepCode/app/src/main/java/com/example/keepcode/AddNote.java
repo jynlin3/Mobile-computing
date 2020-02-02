@@ -9,13 +9,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddNote extends AppCompatActivity {
     Toolbar toolbar;
+    EditText noteTitle;
+    EditText noteDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,9 @@ public class AddNote extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New Note");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        noteTitle = findViewById(R.id.noteTitle);
+        noteDetails = findViewById(R.id.noteDetails);
 
         Intent intent = getIntent();
 //        if (intent != null) {
@@ -45,8 +53,13 @@ public class AddNote extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save)
         {
+            Date currentTime = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(),
+                    dateFormat.format(currentTime), dateFormat.format(currentTime));
+            NoteDatabase.getInstance(this).noteDao().insert(note);
             Toast.makeText(this, "Save btn is clicked", Toast.LENGTH_SHORT).show();
-            onBackPressed();
+            goToMain();
         }
         if (item.getItemId() == R.id.delete)
         {
@@ -54,6 +67,11 @@ public class AddNote extends AppCompatActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goToMain(){
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 
     @Override

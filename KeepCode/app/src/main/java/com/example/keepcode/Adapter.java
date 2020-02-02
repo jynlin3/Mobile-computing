@@ -1,6 +1,5 @@
 package com.example.keepcode;
 
-import android.bluetooth.le.AdvertisingSetParameters;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,11 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private LayoutInflater inflater;
+    private List<Note> notes;
 
-    Adapter(Context context){
+    Adapter(Context context, List<Note> notes){
         this.inflater = LayoutInflater.from(context);
+        this.notes = notes;
     }
 
     @NonNull
@@ -27,13 +30,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
-        String title = "Sample Title";
+        String title = notes.get(position).getTitle();
         holder.nTitle.setText(title);
     }
 
     @Override
     public int getItemCount() {
-        return 1;
+        return notes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
