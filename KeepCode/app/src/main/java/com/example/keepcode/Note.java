@@ -1,6 +1,7 @@
 package com.example.keepcode;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -16,6 +17,15 @@ public class Note implements Serializable {
     private String update_time;
 
     public Note(String title, String content, String create_time, String update_time) {
+        this.title = title;
+        this.content = content;
+        this.create_time = create_time;
+        this.update_time = update_time;
+    }
+
+    @Ignore
+    public Note(int id, String title, String content, String create_time, String update_time) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.create_time = create_time;
