@@ -1,1 +1,1 @@
-A test repository for learning Android
+A test repository for learning Android.
