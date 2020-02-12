@@ -36,11 +36,8 @@
         android:background="@null"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Enter text"
+        android:hint="@string/enter_details"
         android:inputType="textMultiLine"
-        android:isScrollContainer="false"
-        android:maxLines="50"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbars="vertical" />
+        android:maxLines="4" />
 
 </LinearLayout>
