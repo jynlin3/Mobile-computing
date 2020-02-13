@@ -61,9 +61,9 @@ public class AddNote extends AppCompatActivity {
             for (int i = 1; i<contents.length;i+=2)
             {
                 addCodeView();
-                codeViews.get(i-1).getCode().setText(contents[i]);
+                codeViews.get(i/2).getCode().setText(contents[i]);
                 if(i+1 < contents.length)
-                    textViews.get(i).setText(contents[i+1]);
+                    textViews.get(i/2+1).setText(contents[i+1]);
             }
         }
     }
