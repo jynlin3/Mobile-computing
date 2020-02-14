@@ -134,6 +134,7 @@ public class AddNote extends AppCompatActivity {
     {
         //create SyntaxView
         SyntaxView codeView = new SyntaxView(this);
+        codeView.setAutoIndent(true);
         codeView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         layout.addView(codeView);
