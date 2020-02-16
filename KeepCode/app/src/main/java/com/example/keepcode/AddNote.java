@@ -51,7 +51,25 @@ public class AddNote extends AppCompatActivity {
         layout = findViewById(R.id.content);
 
         note = (Note) getIntent().getSerializableExtra("note");
-        if (note != null) {
+        if (savedInstanceState != null) {
+            // Load title and content from the saved instance
+            noteTitle.setText(savedInstanceState.getString("title"));
+            getSupportActionBar().setTitle(savedInstanceState.getString("title"));
+
+            // Create Code View and Text View according to the saved instance
+            String[] contents = savedInstanceState.getString("content")
+                    .split(codePrefix+"|"+codeSuffix);
+            noteDetails.setText(contents[0]);
+            for (int i = 1; i<contents.length;i+=2)
+            {
+                addCodeView();
+                codeViews.get(i/2).getCode().setText(contents[i]);
+                if(i+1 < contents.length)
+                    textViews.get(i/2+1).setText(contents[i+1]);
+            }
+
+        }
+        else if (note != null) {
             noteTitle.setText(note.getTitle());
             getSupportActionBar().setTitle(note.getTitle());
 
@@ -128,6 +146,13 @@ public class AddNote extends AppCompatActivity {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title", noteTitle.getText().toString());
+        outState.putString("content", getNoteDetails());
     }
 
     private void addCodeView()
