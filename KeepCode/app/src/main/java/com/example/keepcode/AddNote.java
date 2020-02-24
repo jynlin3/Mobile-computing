@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.Spinner;
 
@@ -33,6 +34,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     Toolbar toolbar;
     EditText noteTitle;
     Note note;
+    ArrayList<Spinner> spinners;
     ArrayList<SyntaxView> codeViews;
     ArrayList<EditText> textViews;
     LinearLayout layout;
@@ -48,6 +50,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         getSupportActionBar().setTitle("New Note");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        spinners = new ArrayList<>();
         codeViews = new ArrayList<>();
         textViews = new ArrayList<>();
         noteTitle = findViewById(R.id.noteTitle);
@@ -172,6 +175,22 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     private void addCodeView()
     {
+        //create spinner to choose programming language
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add("Java");
+        spinnerArray.add("C");
+        spinnerArray.add("C++");
+        spinnerArray.add("Python");
+        spinnerArray.add("JavaScript");
+
+        Spinner spinner = new Spinner(this);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setSelection(0);
+        spinner.setOnItemSelectedListener(new SpinnerActionListener(codeViews.size()));
+        layout.addView(spinner);
+        spinners.add(spinner);
+
         //create SyntaxView
         SyntaxView codeView = new SyntaxView(this);
         codeView.setAutoIndent(true);
@@ -229,6 +248,30 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+    }
 
+    private class SpinnerActionListener implements AdapterView.OnItemSelectedListener {
+
+        private int index;
+
+        public SpinnerActionListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selectedItem = parent.getItemAtPosition(position).toString();
+            SyntaxView curCodeView = codeViews.get(index);
+            // Update syntax highlighting for different languages
+            String code = curCodeView.getCode().getText().toString();
+            curCodeView.getCode().setText("");
+            curCodeView.setLanguage(selectedItem);
+            curCodeView.getCode().setText(code);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 }
