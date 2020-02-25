@@ -191,6 +191,10 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         {
             file = "progfont.ttf";
         }
+        if (fontName.equals("Roboto"))
+        {
+            file = "Roboto-Regular.ttf";
+        }
         for (EditText tv : textViews )
         {
             Typeface tf = Typeface.createFromAsset(getAssets(), file);
