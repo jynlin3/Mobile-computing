@@ -6,4 +6,8 @@
     <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="sample_note_title">Sample Note TItle</string>
+    <string-array name="fonts_names">
+        <item>Inconsolata</item>
+        <item>Open Sans</item>
+    </string-array>
 </resources>
