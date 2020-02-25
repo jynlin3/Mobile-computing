@@ -80,7 +80,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
                     textViews.get(i/2+1).setText(contents[i+1]);
             }
         }
-        //spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
