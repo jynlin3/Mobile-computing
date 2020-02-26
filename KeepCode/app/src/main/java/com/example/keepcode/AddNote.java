@@ -260,11 +260,12 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private class SpinnerActionListener implements AdapterView.OnItemSelectedListener {
+    private class SpinnerActionListener implements AdapterView.OnItemSelectedListener{
 
         private int index;
 
-        public SpinnerActionListener(int index) {
+        public SpinnerActionListener(int index)
+        {
             this.index = index;
         }
 
