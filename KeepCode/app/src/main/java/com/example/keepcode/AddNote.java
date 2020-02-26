@@ -25,6 +25,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.cryptobrewery.syntaxview.SyntaxView;
 
@@ -36,8 +41,7 @@ public class AddNote extends AppCompatActivity {
     ArrayList<SyntaxView> codeViews;
     ArrayList<EditText> textViews;
     LinearLayout layout;
-    static final String codePrefix = "<<code>>";
-    static final String codeSuffix = "<</code>>";
+    Map<String, List<String>> langTagMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,36 +59,42 @@ public class AddNote extends AppCompatActivity {
         EditText noteDetails = findViewById(R.id.noteDetails);
         textViews.add(noteDetails);
         layout = findViewById(R.id.content);
+        initializeLangTagMap();
 
         note = (Note) getIntent().getSerializableExtra("note");
+        String savedNoteTitle = null;
+        String savedNoteContent = null;
         if (savedInstanceState != null) {
             // Load title and content from the saved instance
-            noteTitle.setText(savedInstanceState.getString("title"));
-            getSupportActionBar().setTitle(savedInstanceState.getString("title"));
-
-            // Create Code View and Text View according to the saved instance
-            String[] contents = savedInstanceState.getString("content")
-                    .split(codePrefix+"|"+codeSuffix);
-            noteDetails.setText(contents[0]);
-            for (int i = 1; i<contents.length;i+=2)
-            {
-                addCodeView();
-                codeViews.get(i/2).getCode().setText(contents[i]);
-                if(i+1 < contents.length)
-                    textViews.get(i/2+1).setText(contents[i+1]);
-            }
-
+            savedNoteTitle = savedInstanceState.getString("title");
+            savedNoteContent = savedInstanceState.getString("content");
         }
         else if (note != null) {
-            noteTitle.setText(note.getTitle());
-            getSupportActionBar().setTitle(note.getTitle());
+            // Load title and content from database
+            savedNoteTitle = note.getTitle();
+            savedNoteContent = note.getContent();
+        }
 
-            // Create Code View and Text View according to the saved content
-            String[] contents = note.getContent().split(codePrefix+"|"+codeSuffix);
+        if(savedNoteContent != null && savedNoteTitle != null)
+        {
+            noteTitle.setText(savedNoteTitle);
+            getSupportActionBar().setTitle(savedNoteTitle);
+
+            // Create Code View and Text View according to the saved instance
+            String[] contents = savedNoteContent.split(getSupportLang());
+            Pattern pattern = Pattern.compile(getSupportLang());
+            Matcher matcher = pattern.matcher(savedNoteContent);
+
             noteDetails.setText(contents[0]);
             for (int i = 1; i<contents.length;i+=2)
             {
-                addCodeView();
+                matcher.find();
+                matcher.find();
+                String codeLang = matcher.group().replaceAll("<</|>>", "");
+                // Special handle for C++, because + is a special character in regular expression
+                if (codeLang.compareTo("Cpp") == 0)
+                    codeLang = "C++";
+                addCodeView(codeLang);
                 codeViews.get(i/2).getCode().setText(contents[i]);
                 if(i+1 < contents.length)
                     textViews.get(i/2+1).setText(contents[i+1]);
@@ -129,7 +139,7 @@ public class AddNote extends AppCompatActivity {
         }
         if(item.getItemId() == R.id.addCode)
         {
-            addCodeView();
+            addCodeView("Java");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,9 +156,9 @@ public class AddNote extends AppCompatActivity {
         {
             sb.append(textViews.get(i).getText().toString());
             if(i<codeViews.size()) {
-                sb.append(codePrefix);
+                sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(0));
                 sb.append(codeViews.get(i).getCode().getText().toString());
-                sb.append(codeSuffix);
+                sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(1));
             }
         }
         return sb.toString();
@@ -161,10 +171,11 @@ public class AddNote extends AppCompatActivity {
         outState.putString("content", getNoteDetails());
     }
 
-    private void addCodeView()
+    private void addCodeView(String lang)
     {
         //create spinner to choose programming language
         ArrayList<String> spinnerArray = new ArrayList<String>();
+        //TODO: get support language from SyntaxView
         spinnerArray.add("Java");
         spinnerArray.add("C");
         spinnerArray.add("C++");
@@ -174,7 +185,7 @@ public class AddNote extends AppCompatActivity {
         Spinner spinner = new Spinner(this);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
         spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setSelection(0);
+        spinner.setSelection(spinnerArray.indexOf(lang));
         spinner.setOnItemSelectedListener(new SpinnerActionListener(codeViews.size()));
         layout.addView(spinner);
         spinners.add(spinner);
@@ -227,6 +238,7 @@ public class AddNote extends AppCompatActivity {
             // Update syntax highlighting for different languages
             String code = curCodeView.getCode().getText().toString();
             curCodeView.getCode().setText("");
+            // TODO: Modify setLanguage() to accept Cpp for C++
             curCodeView.setLanguage(selectedItem);
             curCodeView.getCode().setText(code);
         }
@@ -235,5 +247,40 @@ public class AddNote extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> parent) {
 
         }
+    }
+
+    private void initializeLangTagMap(){
+        langTagMap = new HashMap<>();
+        //TODO: get langs from SyntaxView
+        String langs[] = new String[]{"Java", "C", "C++", "Python", "JavaScript"};
+        for (String l : langs) {
+            List<String> tags = new ArrayList<>();
+            // Special handle for C++, because + is a special character in regular expression.
+            if (l.compareTo("C++") == 0) {
+                tags.add("<<Cpp>>");
+                tags.add("<</Cpp>>");
+            }
+            else {
+                tags.add("<<" + l + ">>");
+                tags.add("<</" + l + ">>");
+            }
+            langTagMap.put(l, tags);
+        }
+    }
+
+    private String getSupportLang()
+    {
+        StringBuffer sb = new StringBuffer("");
+        for(List<String>tags:langTagMap.values())
+        {
+            for(String tag:tags)
+            {
+                sb.append(tag);
+                sb.append("|");
+            }
+        }
+        if(sb.length() > 0)
+            sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }
