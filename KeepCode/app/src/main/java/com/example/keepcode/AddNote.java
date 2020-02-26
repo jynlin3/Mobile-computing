@@ -5,16 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.Spinner;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,7 +29,7 @@ import java.util.Date;
 
 import net.cryptobrewery.syntaxview.SyntaxView;
 
-public class AddNote extends AppCompatActivity {
+public class AddNote extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Toolbar toolbar;
     EditText noteTitle;
     Note note;
@@ -49,6 +54,15 @@ public class AddNote extends AppCompatActivity {
         EditText noteDetails = findViewById(R.id.noteDetails);
         textViews.add(noteDetails);
         layout = findViewById(R.id.content);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.fonts_names, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         note = (Note) getIntent().getSerializableExtra("note");
         if (savedInstanceState != null) {
@@ -84,6 +98,7 @@ public class AddNote extends AppCompatActivity {
                     textViews.get(i/2+1).setText(contents[i+1]);
             }
         }
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -187,5 +202,33 @@ public class AddNote extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String fontName = (String) parent.getSelectedItem();
+        String file = "";
+        if (fontName.equals("Open Sans"))
+        {
+            file = "OpenSans-Regular.ttf";
+        }
+        if (fontName.equals("Inconsolata"))
+        {
+            file = "progfont.ttf";
+        }
+        if (fontName.equals("Roboto"))
+        {
+            file = "Roboto-Regular.ttf";
+        }
+        for (EditText tv : textViews )
+        {
+            Typeface tf = Typeface.createFromAsset(getAssets(), file);
+            tv.setTypeface(tf);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
