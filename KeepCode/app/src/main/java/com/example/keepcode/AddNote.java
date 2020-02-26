@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.Spinner;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
