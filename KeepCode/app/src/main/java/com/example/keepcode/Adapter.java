@@ -39,6 +39,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return notes.size();
     }
 
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView nTitle;
         public ViewHolder(@NonNull final View itemView){

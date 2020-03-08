@@ -1,5 +1,6 @@
 package com.example.keepcode;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -21,7 +22,7 @@ public interface NoteDao {
     void delete(Note note);
 
     @Query("SELECT * FROM note_table ORDER BY id DESC")
-    List<Note> getAllNotes();
+    LiveData<List<Note>> getAllNotes(); // subscribe changes in note_table
 
     @Query("DELETE FROM note_table WHERE id = :noteId")
     void deleteByNoteId(long noteId);

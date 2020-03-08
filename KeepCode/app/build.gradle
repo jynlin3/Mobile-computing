@@ -38,4 +38,8 @@ dependencies {
     // CodeView component
     implementation 'com.github.jynlin3:Syntax-View-Android:9de4269da5'
 
+    // ViewModel componenet
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+
 }

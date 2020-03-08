@@ -157,8 +157,8 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     }
 
     private void goToMain(){
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        setResult(RESULT_OK);
+        finish();
     }
 
     private String getNoteDetails()

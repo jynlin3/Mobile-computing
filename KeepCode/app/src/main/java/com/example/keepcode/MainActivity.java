@@ -3,6 +3,8 @@ package com.example.keepcode;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,13 +14,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
-    Adapter adapter;
-    List<Note> notes;
+    private Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +31,15 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.listOfNotes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        notes = NoteDatabase.getInstance(this).noteDao().getAllNotes();
-        adapter = new Adapter(this, notes);
+        adapter = new Adapter(this, new ArrayList<Note>());
         recyclerView.setAdapter(adapter);
+        NoteViewModel model = new ViewModelProvider(this).get(NoteViewModel.class);
+        model.getLiveDataNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                adapter.setNotes(notes);
+            }
+        });
     }
 
     @Override
@@ -46,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.add)
         {
             Intent i = new Intent(this, AddNote.class);
-            startActivity(i);
+            final int result = 1;
+            startActivityForResult(i, result);
         }
         return super.onOptionsItemSelected(item);
     }
