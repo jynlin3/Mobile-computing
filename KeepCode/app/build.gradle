@@ -36,6 +36,6 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // CodeView component
-    implementation 'com.github.jynlin3:Syntax-View-Android:v2.0'
+    implementation 'com.github.jynlin3:Syntax-View-Android:9de4269da5'
 
 }

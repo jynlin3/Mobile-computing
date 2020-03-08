@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -185,14 +186,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     private void addCodeView(String lang)
     {
         //create spinner to choose programming language
-        ArrayList<String> spinnerArray = new ArrayList<String>();
-        //TODO: get support language from SyntaxView
-        spinnerArray.add("Java");
-        spinnerArray.add("C");
-        spinnerArray.add("C++");
-        spinnerArray.add("Python");
-        spinnerArray.add("JavaScript");
-
+        List<String> spinnerArray = Arrays.asList(SyntaxView.getSupportLanguage());
         Spinner spinner = new Spinner(this);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
         spinner.setAdapter(spinnerArrayAdapter);
@@ -276,7 +270,6 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
             // Update syntax highlighting for different languages
             String code = curCodeView.getCode().getText().toString();
             curCodeView.getCode().setText("");
-            // TODO: Modify setLanguage() to accept Cpp for C++
             curCodeView.setLanguage(selectedItem);
             curCodeView.getCode().setText(code);
         }
@@ -289,8 +282,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     private void initializeLangTagMap(){
         langTagMap = new HashMap<>();
-        //TODO: get langs from SyntaxView
-        String langs[] = new String[]{"Java", "C", "C++", "Python", "JavaScript"};
+        String[] langs = SyntaxView.getSupportLanguage();
         for (String l : langs) {
             List<String> tags = new ArrayList<>();
             // Special handle for C++, because + is a special character in regular expression.
