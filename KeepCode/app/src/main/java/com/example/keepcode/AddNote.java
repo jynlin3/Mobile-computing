@@ -123,35 +123,19 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.save) {
-            Date currentTime = Calendar.getInstance().getTime();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            if (note==null) {
-                // Add Note
-                Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(),
-                        dateFormat.format(currentTime), dateFormat.format(currentTime));
-                NoteDatabase.getInstance(this).noteDao().insert(newNote);
-            }
-            else {
-                // Update Note
-                Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(),
-                        note.getCreate_time(), dateFormat.format(currentTime));
-                NoteDatabase.getInstance(this).noteDao().update(newNote);
-            }
-            goToMain();
-        }
-        if (item.getItemId() == R.id.delete)
+        switch (item.getItemId())
         {
-            if(note != null) {
-                NoteDatabase.getInstance(this).noteDao().deleteByNoteId(note.getId());
-                Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is deleted.", Toast.LENGTH_SHORT)
-                        .show();
-            }
-            goToMain();
-        }
-        if(item.getItemId() == R.id.addCode)
-        {
-            addCodeView("Java");
+            case R.id.delete:
+                if(note != null) {
+                    NoteDatabase.getInstance(this).noteDao().deleteByNoteId(note.getId());
+                    Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is deleted.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                goToMain();
+                break;
+            case R.id.addCode:
+                addCodeView("Java");
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -224,6 +208,23 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onBackPressed() {
+        // Save note
+        Date currentTime = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        if (note==null) {
+            // Add Note
+            Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(),
+                    dateFormat.format(currentTime), dateFormat.format(currentTime));
+            NoteDatabase.getInstance(this).noteDao().insert(newNote);
+        }
+        else {
+            // Update Note
+            Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(),
+                    note.getCreate_time(), dateFormat.format(currentTime));
+            NoteDatabase.getInstance(this).noteDao().update(newNote);
+        }
+        Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is saved.", Toast.LENGTH_SHORT)
+                .show();
         super.onBackPressed();
     }
 
@@ -312,5 +313,12 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         if(sb.length() > 0)
             sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        onBackPressed();
+        return true;
     }
 }

@@ -8,11 +8,6 @@
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/save"
-        android:icon="@drawable/ic_check_24dp"
-        android:title="@string/save"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/addCode"
         android:icon="@drawable/ic_code_black_24dp"
         android:title="Add Code Snippet"
