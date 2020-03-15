@@ -13,14 +13,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     Toolbar toolbar;
     RecyclerView recyclerView;
     private Adapter adapter;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(this);
 
         recyclerView = findViewById(R.id.listOfNotes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -58,5 +64,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, result);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+            //handle multiple view click events
+        Intent i = new Intent(this, SettingsFragment.class);
+        final int result = 1;
+        startActivityForResult(i, result);
     }
 }

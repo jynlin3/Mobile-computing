@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
@@ -63,6 +65,11 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         layout = findViewById(R.id.content);
         initializeLangTagMap();
 
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        //String defaultFont = getResources().getString(R.integer.saved_font_default_key);
+        String font = sharedPref.getString(getString(R.string.font_key), "Roboto");
+
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -112,6 +119,9 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
             }
         }
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(getIndex(spinner, font));
+        spinners.add(spinner);
+        setFont(font);
     }
 
     @Override
@@ -119,6 +129,18 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.save_menu, menu);
         return true;
+    }
+
+    private int getIndex(Spinner spinner, String myString){
+        for (int i = 0; i < spinner.getCount(); i++)
+        {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString))
+            {
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     @Override
@@ -228,9 +250,8 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         super.onBackPressed();
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String fontName = (String) parent.getSelectedItem();
+    public void setFont(String fontName)
+    {
         String file = "";
         if (fontName.equals("Open Sans"))
         {
@@ -249,6 +270,20 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
             Typeface tf = Typeface.createFromAsset(getAssets(), file);
             tv.setTypeface(tf);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String fontName = (String) parent.getSelectedItem();
+        ArrayAdapter adapter = (ArrayAdapter) parent.getAdapter();
+        adapter.getPosition(fontName);
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.font_key), fontName);
+        editor.apply();
+
+        setFont(fontName);
     }
 
     @Override
