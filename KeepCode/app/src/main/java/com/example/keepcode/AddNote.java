@@ -4,16 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -188,20 +187,8 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         codeViews.add(codeView);
 
         //create EditText
-        EditText textView = new EditText(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //set margins of EditText with dp
-        int dpValue = 16;
-        float d = this.getResources().getDisplayMetrics().density;
-        int margin = (int) (dpValue * d);
-        lp.setMargins(margin,margin, margin, margin);
-        textView.setLayoutParams(lp);
-        //configure multiline EditText
-        textView.setBackground(null);
-        textView.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
-        textView.setMaxLines(4);
-        textView.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        EditText textView = (EditText) inflater.inflate(R.layout.multiedittext, layout, false);
         layout.addView(textView);
         textViews.add(textView);
     }
