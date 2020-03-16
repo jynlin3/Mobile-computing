@@ -11,4 +11,6 @@
         <item>Inconsolata</item>
         <item>Open Sans</item>
     </string-array>
+    <string name="search">Search</string>
+    <string name="add_code_snippet">Add Code Snippet</string>
 </resources>

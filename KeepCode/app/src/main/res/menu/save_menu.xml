@@ -10,6 +10,6 @@
     <item
         android:id="@+id/addCode"
         android:icon="@drawable/ic_code_black_24dp"
-        android:title="Add Code Snippet"
+        android:title="@string/add_code_snippet"
         app:showAsAction="ifRoom" />
 </menu>
