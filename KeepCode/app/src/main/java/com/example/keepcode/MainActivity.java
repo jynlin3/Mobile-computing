@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.setNotes(notes);
             }
         });
+        PreferenceManager.setDefaultValues(this,
+                R.xml.root_preferences, false);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view)
     {
             //handle multiple view click events
-        Intent i = new Intent(this, SettingsFragment.class);
+        Intent i = new Intent(this, SettingsActivity.class);
         final int result = 1;
         startActivityForResult(i, result);
     }

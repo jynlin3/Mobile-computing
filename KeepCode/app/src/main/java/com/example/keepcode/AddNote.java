@@ -3,6 +3,7 @@ package com.example.keepcode;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -65,19 +66,10 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         layout = findViewById(R.id.content);
         initializeLangTagMap();
 
-
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        //String defaultFont = getResources().getString(R.integer.saved_font_default_key);
-        String font = sharedPref.getString(getString(R.string.font_key), "Roboto");
-
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.fonts_names, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String font = sharedPref.getString("Font", "Roboto");
+        Toast toast = Toast.makeText(getApplicationContext(), "Font: " + font, Toast.LENGTH_SHORT);
+        toast.show();
 
         note = (Note) getIntent().getSerializableExtra("note");
         String savedNoteTitle = null;
@@ -118,9 +110,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
                     textViews.get(i/2+1).setText(contents[i+1]);
             }
         }
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(getIndex(spinner, font));
-        spinners.add(spinner);
+
         setFont(font);
     }
 
@@ -265,10 +255,15 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         {
             file = "Roboto-Regular.ttf";
         }
+        // Set the fonts
+        Typeface tf = Typeface.createFromAsset(getAssets(), file);
         for (EditText tv : textViews )
         {
-            Typeface tf = Typeface.createFromAsset(getAssets(), file);
             tv.setTypeface(tf);
+        }
+        for (SyntaxView sv : codeViews )
+        {
+            sv.setFont(tf);
         }
     }
 
