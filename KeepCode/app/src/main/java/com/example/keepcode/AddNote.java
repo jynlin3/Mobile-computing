@@ -4,16 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -136,6 +136,11 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
             case R.id.addCode:
                 addCodeView("Java");
                 break;
+            case R.id.share:
+                shareNote();
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -145,16 +150,22 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         finish();
     }
 
-    private String getNoteDetails()
+    private String getNoteDetails(boolean addTags)
     {
         StringBuffer sb = new StringBuffer("");
         for (int i = 0; i < textViews.size(); i++)
         {
             sb.append(textViews.get(i).getText().toString());
             if(i<codeViews.size()) {
-                sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(0));
+                if(addTags)
+                    sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(0));
+                else
+                    sb.append("\n\n");
                 sb.append(codeViews.get(i).getCode().getText().toString());
-                sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(1));
+                if(addTags)
+                    sb.append(langTagMap.get(spinners.get(i).getSelectedItem().toString()).get(1));
+                else
+                    sb.append("\n\n");
             }
         }
         return sb.toString();
@@ -164,7 +175,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("title", noteTitle.getText().toString());
-        outState.putString("content", getNoteDetails());
+        outState.putString("content", getNoteDetails(true));
     }
 
     private void addCodeView(String lang)
@@ -188,20 +199,8 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         codeViews.add(codeView);
 
         //create EditText
-        EditText textView = new EditText(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //set margins of EditText with dp
-        int dpValue = 16;
-        float d = this.getResources().getDisplayMetrics().density;
-        int margin = (int) (dpValue * d);
-        lp.setMargins(margin,margin, margin, margin);
-        textView.setLayoutParams(lp);
-        //configure multiline EditText
-        textView.setBackground(null);
-        textView.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
-        textView.setMaxLines(4);
-        textView.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        EditText textView = (EditText) inflater.inflate(R.layout.multiedittext, layout, false);
         layout.addView(textView);
         textViews.add(textView);
     }
@@ -213,13 +212,13 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         if (note==null) {
             // Add Note
-            Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(),
+            Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(true),
                     dateFormat.format(currentTime), dateFormat.format(currentTime));
             NoteDatabase.getInstance(this).noteDao().insert(newNote);
         }
         else {
             // Update Note
-            Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(),
+            Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(true),
                     note.getCreate_time(), dateFormat.format(currentTime));
             NoteDatabase.getInstance(this).noteDao().update(newNote);
         }
@@ -320,5 +319,14 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     {
         onBackPressed();
         return true;
+    }
+
+    private void shareNote()
+    {
+        Intent mSharingIntent = new Intent(Intent.ACTION_SEND);
+        mSharingIntent.setType("text/plain");
+        mSharingIntent.putExtra(Intent.EXTRA_SUBJECT, noteTitle.getText().toString());
+        mSharingIntent.putExtra(Intent.EXTRA_TEXT, getNoteDetails(false));
+        startActivity(Intent.createChooser(mSharingIntent, "Share text via"));
     }
 }
