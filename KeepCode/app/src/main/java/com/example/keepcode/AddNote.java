@@ -67,8 +67,9 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String font = sharedPref.getString("Font", "Roboto");
-        Toast toast = Toast.makeText(getApplicationContext(), "Font: " + font, Toast.LENGTH_SHORT);
-        toast.show();
+        // Debug logging
+//        Toast toast = Toast.makeText(getApplicationContext(), "Font: " + font, Toast.LENGTH_SHORT);
+//        toast.show();
 
         note = (Note) getIntent().getSerializableExtra("note");
         String savedNoteTitle = null;

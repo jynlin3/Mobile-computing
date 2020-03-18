@@ -1,23 +1,18 @@
 package com.example.keepcode;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
-
-import net.cryptobrewery.syntaxview.SyntaxView;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
+    private SharedPreferences sharedPref;
+    private TextView txtView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,34 +21,28 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
+                .add(R.id.fragment_container, new SettingsFragment())
                 .commit();
-        String file = "";
 
-        TextView txtView1 = (TextView) findViewById(R.id.textView2);
-        TextView txtView2 = (TextView) findViewById(R.id.textView3);
-        TextView txtView3 = (TextView) findViewById(R.id.textView4);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String font = sharedPref.getString("Font", "Roboto");
+        txtView = (TextView) findViewById(R.id.textView);
+        txtView.setTypeface(getFontTypeface(font));
 
-        // Set the fonts
-        Typeface tf1 = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-        txtView1.setTypeface(tf1);
-        Typeface tf2 = Typeface.createFromAsset(getAssets(), "progfont.ttf");
-        txtView2.setTypeface(tf2);
-        Typeface tf3 = Typeface.createFromAsset(getAssets(), "Roboto-Regular.ttf");
-        txtView3.setTypeface(tf3);
-    }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    public abstract class MySettingsFragment extends PreferenceFragmentCompat
-    {
-        @Override
-        public void onCreate(final Bundle savedInstanceState)
+        sharedPref.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener()
         {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.root_preferences);
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-
-        }
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+            {
+                String font = sharedPref.getString("Font", "Roboto");
+                txtView.setTypeface(getFontTypeface(font));
+            }
+        });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -65,5 +54,23 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
+    }
+
+    public Typeface getFontTypeface(String fontName)
+    {
+        String file = "";
+        if (fontName.equals("Open Sans"))
+        {
+            file = "OpenSans-Regular.ttf";
+        }
+        if (fontName.equals("Inconsolata"))
+        {
+            file = "progfont.ttf";
+        }
+        if (fontName.equals("Roboto"))
+        {
+            file = "Roboto-Regular.ttf";
+        }
+        return Typeface.createFromAsset(getAssets(), file);
     }
 }

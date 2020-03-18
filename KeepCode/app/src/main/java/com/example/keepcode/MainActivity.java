@@ -15,17 +15,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
     private Adapter adapter;
-    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(this);
 
         recyclerView = findViewById(R.id.listOfNotes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,21 +92,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.app_bar_add)
+        final int result = 1;
+        Intent i;
+        switch (item.getItemId())
         {
-            Intent i = new Intent(this, AddNote.class);
-            final int result = 1;
-            startActivityForResult(i, result);
+            case R.id.app_bar_add:
+                i = new Intent(this, AddNote.class);
+                startActivityForResult(i, result);
+                break;
+            case R.id.app_bar_setting:
+                i = new Intent(this, SettingsActivity.class);
+                startActivityForResult(i, result);
+                break;
+            default:
+                break;
+
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-            //handle multiple view click events
-        Intent i = new Intent(this, SettingsActivity.class);
-        final int result = 1;
-        startActivityForResult(i, result);
     }
 }

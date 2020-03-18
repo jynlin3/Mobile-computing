@@ -1,46 +1,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/linearLayout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_conversion_absoluteHeight="411dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_conversion_absoluteWidth="411dp" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="@string/app_settings"
+        />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Roboto looks like this"
-        tools:layout_conversion_absoluteHeight="301dp"
-        tools:layout_editor_absoluteY="411dp"
-        tools:layout_editor_absoluteX="10dp"
-        android:paddingLeft="20dp"
-        tools:layout_conversion_absoluteWidth="59dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Inconsolata looks like this"
-        tools:layout_conversion_absoluteHeight="19dp"
-        tools:layout_editor_absoluteY="712dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:paddingLeft="20dp"
-        tools:layout_conversion_absoluteWidth="411dp" />
-
-    <TextView
-        android:id="@+id/textView4"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:text="Open Sans looks like this" />
+        android:id="@+id/fragment_container"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preview"
+        android:padding="20dp"
+        android:background="#D1E3DD"
+        android:textColor="#000000"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="@string/sample_text"
+        android:background="@drawable/green_border"/>
+
 </LinearLayout>
