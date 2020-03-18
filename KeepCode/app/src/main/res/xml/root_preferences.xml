@@ -24,6 +24,7 @@
             app:entryValues="@array/fonts_names"
             app:key="Font"
             app:title="Fonts"
+            app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>

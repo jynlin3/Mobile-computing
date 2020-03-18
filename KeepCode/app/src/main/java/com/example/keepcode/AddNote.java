@@ -257,6 +257,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         }
         // Set the fonts
         Typeface tf = Typeface.createFromAsset(getAssets(), file);
+
         for (EditText tv : textViews )
         {
             tv.setTypeface(tf);
