@@ -219,21 +219,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onBackPressed() {
-        // Save note
-        Date currentTime = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        if (note==null) {
-            // Add Note
-            Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(true),
-                    dateFormat.format(currentTime), dateFormat.format(currentTime));
-            NoteDatabase.getInstance(this).noteDao().insert(newNote);
-        }
-        else {
-            // Update Note
-            Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(true),
-                    note.getCreate_time(), dateFormat.format(currentTime));
-            NoteDatabase.getInstance(this).noteDao().update(newNote);
-        }
+        saveNote();
         Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is saved.", Toast.LENGTH_SHORT)
                 .show();
         super.onBackPressed();
@@ -359,5 +345,28 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         mSharingIntent.putExtra(Intent.EXTRA_SUBJECT, noteTitle.getText().toString());
         mSharingIntent.putExtra(Intent.EXTRA_TEXT, getNoteDetails(false));
         startActivity(Intent.createChooser(mSharingIntent, "Share text via"));
+    }
+
+    @Override
+    protected void onPause() {
+        saveNote();
+        super.onPause();
+    }
+
+    private void saveNote(){
+        Date currentTime = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        if (note==null) {
+            // Add Note
+            Note newNote = new Note(noteTitle.getText().toString(), getNoteDetails(true),
+                    dateFormat.format(currentTime), dateFormat.format(currentTime));
+            NoteDatabase.getInstance(this).noteDao().insert(newNote);
+        }
+        else {
+            // Update Note
+            Note newNote = new Note(note.getId(), noteTitle.getText().toString(), getNoteDetails(true),
+                    note.getCreate_time(), dateFormat.format(currentTime));
+            NoteDatabase.getInstance(this).noteDao().update(newNote);
+        }
     }
 }
