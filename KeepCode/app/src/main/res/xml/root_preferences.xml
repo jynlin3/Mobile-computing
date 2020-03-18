@@ -21,7 +21,7 @@
             app:entries="@array/fonts_names"
             app:entryValues="@array/fonts_names"
             app:key="Font"
-            app:title="Choose Font of Plain Text"
+            app:title="Choose Font"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
