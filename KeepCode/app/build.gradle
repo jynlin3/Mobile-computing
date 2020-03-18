@@ -36,7 +36,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // CodeView component
-    implementation 'com.github.jynlin3:Syntax-View-Android:9de4269da5'
+    implementation 'com.github.jynlin3:Syntax-View-Android:16b1cb2862'
 
     // ViewModel componenet
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
