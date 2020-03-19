@@ -219,7 +219,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onBackPressed() {
-        saveNote();
+//        saveNote();
         Toast.makeText(this, "Note: " + noteTitle.getText().toString() + " is saved.", Toast.LENGTH_SHORT)
                 .show();
         super.onBackPressed();
