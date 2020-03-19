@@ -6,6 +6,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,7 +15,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setNotes(notes);
             }
         });
+        PreferenceManager.setDefaultValues(this,
+                R.xml.root_preferences, false);
     }
 
     @Override
@@ -90,11 +92,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.app_bar_add)
+        final int result = 1;
+        Intent i;
+        switch (item.getItemId())
         {
-            Intent i = new Intent(this, AddNote.class);
-            final int result = 1;
-            startActivityForResult(i, result);
+            case R.id.app_bar_add:
+                i = new Intent(this, AddNote.class);
+                startActivityForResult(i, result);
+                break;
+            case R.id.app_bar_setting:
+                i = new Intent(this, SettingsActivity.class);
+                startActivityForResult(i, result);
+                break;
+            default:
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
